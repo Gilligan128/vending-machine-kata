@@ -9,6 +9,12 @@ namespace PillarKata.VendingMachine
     public class VendingMachine
     {
         private readonly List<Coin> _coinsInserted = new List<Coin>();
+        private IDictionary<double, decimal> _weightToValueMap = new Dictionary<double, decimal>
+        {
+            {5, .05m}
+            ,{2.27, .10m}
+            ,{5.67, .25m}
+        };
 
         public Display CheckDisplay()
         {
@@ -29,14 +35,21 @@ namespace PillarKata.VendingMachine
 
         public void InsertCoin(Coin coin)
         {
-            _coinsInserted.Add(coin);
+            if (_weightToValueMap.ContainsKey(coin.WeightInGrams))
+                _coinsInserted.Add(coin);
         }
 
         private decimal GetCurrentAmount()
         {
-           return _coinsInserted.Sum(x => .05m);
+            return _coinsInserted.Sum(x => _weightToValueMap[x.WeightInGrams]);
+        }
+
+        public IList<Coin> GetCoinReturn()
+        {
+            
+            return new List<Coin>();
         }
     }
 
-    
+
 }
