@@ -52,6 +52,11 @@ namespace PillarKata.VendingMachine
         {
             return _coinReturn;
         }
+
+        public void PressButton(string buttonCode)
+        {
+            
+        }
     }
 
 
