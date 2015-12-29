@@ -10,23 +10,25 @@ namespace PillarKata.VendingMachine
         private readonly List<Coin> _coinReturn = new List<Coin>();
         private string _currentMessage = "INSERT COINS";
 
-        private readonly List<string> _validButtonCodes = new List<string>
+        private readonly  IDictionary<string, decimal> _productCatalog = new Dictionary<string, decimal>
         {
-            "COLA"
-        };
+            {"COLA", 1m},
+            {"CHIPS", .5m},
+            {"CANDY", .65m}
+        }; //TODO: Refactor this into an injected map.
 
         private readonly IDictionary<double, decimal> _weightToValueMap = new Dictionary<double, decimal>
         {
-            {5, .05m}
-            ,
-            {2.27, .10m}
-            ,
+            {5, .05m},
+            {2.27, .10m},
             {5.67, .25m}
-        };
+        }; 
 
         public Display CheckDisplay()
         {
-            return new Display(_currentMessage, GetCurrentAmount());
+            var display = new Display(_currentMessage, GetCurrentAmount());
+            _currentMessage = "INSERT COINS";
+            return display;
         }
 
         public void InsertCoin(Coin coin)
@@ -51,8 +53,8 @@ namespace PillarKata.VendingMachine
         {
             buttonCode = (buttonCode ?? "").ToUpper(); //Postel's Law ;-)
 
-            if (_validButtonCodes.Contains(buttonCode))
-                _currentMessage = "PRICE $1.00";
+            if (_productCatalog.ContainsKey(buttonCode))
+                _currentMessage = string.Format("PRICE {0:C}", _productCatalog[buttonCode]);
         }
 
         public class Display
