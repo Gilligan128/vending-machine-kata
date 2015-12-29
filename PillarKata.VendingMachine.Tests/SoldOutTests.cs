@@ -7,7 +7,7 @@ namespace PillarKata.VendingMachine.Tests
         private readonly TestBuilder _testBuilder = new TestBuilder();
 
         [Fact]
-        public void ShouldDisplaySoldOutWhenButtonPressedButProductNotAvailable()
+        public void ShouldDisplaySoldOutWhenCoinsInsertedAndButtonPressedButProductNotAvailable()
         {
             var sut = new VendingMachine(new StubbedDispenser());
 
@@ -18,5 +18,29 @@ namespace PillarKata.VendingMachine.Tests
             var display = sut.CheckDisplay();
             Assert.Equal("SOLD OUT", display);
         }
+
+        [Fact]
+        public void ShouldDisplaySoldOutWhenButtonPressedButProductNotAvailable()
+        {
+            var sut = new VendingMachine(new StubbedDispenser());
+
+            sut.PressButton(ProductCodes.Chips);
+
+            var display = sut.CheckDisplay();
+            Assert.Equal("SOLD OUT", display);
+        }
+
+        [Fact]
+        public void ShouldDisplayDefaultMessageWhenUnavailablProductButtonPressedAndDisplayChecked()
+        {
+            var sut = new VendingMachine(new StubbedDispenser());
+
+            sut.PressButton(ProductCodes.Chips);
+            sut.CheckDisplay();
+
+            var display = sut.CheckDisplay();
+            Assert.Equal("INSERT COINS", display);
+        }
+
     }
 }

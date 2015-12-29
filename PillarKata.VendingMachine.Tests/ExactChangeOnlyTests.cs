@@ -1,6 +1,15 @@
-﻿namespace PillarKata.VendingMachine.Tests
+﻿using Xunit;
+
+namespace PillarKata.VendingMachine.Tests
 {
-    class ExactChangeOnlyTests
+    public class ExactChangeOnlyTests
     {
+        public void ShouldDisplayExactChangeOnlyWhenThereArenoCoinsStocked()
+        {
+            var sut = new VendingMachine(new StubbedDispenser());
+
+            var display = sut.CheckDisplay();
+            Assert.Equal("EXACT CHANGE ONLY", display);
+        }
     }
 }
