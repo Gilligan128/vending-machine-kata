@@ -1,10 +1,20 @@
-﻿namespace PillarKata.VendingMachine.Tests
+﻿using System.Collections.Generic;
+using System.Linq;
+
+namespace PillarKata.VendingMachine.Tests
 {
     public class TestBuilder
     {
         public VendingMachine CreateVendingMachine()
         {
-            return new VendingMachine(new StubbedDispenser());
+            var vendingMachine = new VendingMachine(new StubbedDispenser());
+            vendingMachine.StockProduct(new Dictionary<string, int>
+            {
+                {ProductCodes.Cola, 1},
+                {ProductCodes.Candy, 1},
+                {ProductCodes.Chips,1}
+            });
+            return vendingMachine;
         }
 
         public Coin CreateQuarter()

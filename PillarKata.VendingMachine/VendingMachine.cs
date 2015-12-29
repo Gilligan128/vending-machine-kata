@@ -26,10 +26,12 @@ namespace PillarKata.VendingMachine
         };
 
         private string _currentMessage = DefaultMessageWithoutCoins;
+        private readonly Dictionary<string, int> _productStock;
 
         public VendingMachine(IDispenseProduct dispenser)
         {
             _dispenser = dispenser;
+            _productStock = _productCatalog.Keys.ToDictionary(k => k, s => 0);
         }
 
         public string CheckDisplay()
@@ -73,6 +75,12 @@ namespace PillarKata.VendingMachine
             if (!_productCatalog.ContainsKey(productCode))
                 return;
 
+            if (_productStock[productCode] <= 0)
+            {
+                _currentMessage = "SOLD OUT";
+                return;
+            }
+
             var productPrice = _productCatalog[productCode];
             _currentMessage = string.Format("PRICE {0:C}", productPrice);
 
@@ -113,6 +121,16 @@ namespace PillarKata.VendingMachine
         public void ReturnCoins()
         {
             _coinReturn.AddRange(_coinsInserted);
+        }
+
+        public void StockProduct(IDictionary<string, int> productsStocked)
+        {
+            var sanitizedProductStock = productsStocked.ToDictionary(x => SanitizeProductCode(x.Key), x => x.Value);
+            var validProducts = sanitizedProductStock.Where(x => _productCatalog.ContainsKey(SanitizeProductCode(x.Key)));
+            foreach (var validProduct in validProducts)
+            {
+                _productStock[validProduct.Key] = validProduct.Value;
+            }
         }
     }
 }

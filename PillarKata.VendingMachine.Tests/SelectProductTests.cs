@@ -1,4 +1,6 @@
-﻿using Microsoft.SqlServer.Server;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Microsoft.SqlServer.Server;
 using Xunit;
 
 namespace PillarKata.VendingMachine.Tests
@@ -76,6 +78,7 @@ namespace PillarKata.VendingMachine.Tests
         {
             var sut = _testBuilder.CreateVendingMachine();
 
+            sut.StockProduct(new Dictionary<string, int> { { ProductCodes.Cola, 1 } });
             sut.InsertCoin(new Coin(CoinWeights.Nickel));
             sut.PressButton(ProductCodes.Cola);
             sut.CheckDisplay(); //The thought did cross my mind that we may be breaking Command/Query Separation here
@@ -97,6 +100,7 @@ namespace PillarKata.VendingMachine.Tests
             {
                sut.InsertCoin(_testBuilder.CreateQuarter()); 
             }
+            sut.StockProduct(new Dictionary<string, int>{ {productCode, 1}});
             sut.PressButton(productCode);
 
             Assert.True(dispenser.WasProductDispensed);
@@ -115,6 +119,7 @@ namespace PillarKata.VendingMachine.Tests
             {
                 sut.InsertCoin(_testBuilder.CreateQuarter());
             }
+            sut.StockProduct(new Dictionary<string, int>{ {productCode, 1}});
             sut.PressButton(productCode);
 
             var display = sut.CheckDisplay();

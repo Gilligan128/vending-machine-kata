@@ -10,6 +10,7 @@ namespace PillarKata.VendingMachine.Tests
         [Theory]
         [InlineData(1, 1, 1)]
         [InlineData(2, 1, 0)]
+        [InlineData(0,0,0)]
         public void SouldReturnCoinsInsertedWhenReturnCoinsIsPressed(int numberOfQuarters, int numberOfDimes, int numberOfNickels)
         {
             var sut = _testBuilder.CreateVendingMachine();
