@@ -68,17 +68,5 @@ namespace PillarKata.VendingMachine
             if (_productCatalog.ContainsKey(buttonCode))
                 _currentMessage = string.Format("PRICE {0:C}", _productCatalog[buttonCode]);
         }
-
-        public class Display
-        {
-            public Display(string message, decimal currentAmount)
-            {
-                Message = message;
-                Amount = currentAmount;
-            }
-
-            public string Message { get; private set; }
-            public decimal Amount { get; set; }
-        }
     }
 }
