@@ -25,8 +25,6 @@ namespace PillarKata.VendingMachine
             {5.67, .25m}
         };
 
-      
-
         private string _currentMessage = DefaultMessageWithoutCoins;
 
         public VendingMachine(IDispenseProduct dispenser)
@@ -70,7 +68,7 @@ namespace PillarKata.VendingMachine
 
         public void PressButton(string productCode)
         {
-            productCode = (productCode ?? "").ToUpper(); //Postel's Law ;-)
+            productCode = SanitizeProductCode(productCode); //Postel's Law ;-)
 
             if (!_productCatalog.ContainsKey(productCode))
                 return;
@@ -82,24 +80,34 @@ namespace PillarKata.VendingMachine
             if (currentAmount < productPrice) return;
 
             _dispenser.DispenseProduct(productCode);
+
             _currentMessage = "THANK YOU";
-
-            var amountDifference = currentAmount - productPrice;
-
-            int quartersToReturn = (int) (amountDifference/.25m);
-            int dimesToReturn = (int) ((amountDifference - quartersToReturn*.25m)/.10m);
-            int nickelsToReturn = (int) ((amountDifference - quartersToReturn*.25m - dimesToReturn*.10m)/.05m);
 
             _coinsInserted.Clear();
 
-            _coinReturn.AddRange(Enumerable.Repeat(new Coin(5.67), quartersToReturn));
-            _coinReturn.AddRange(Enumerable.Repeat(new Coin(2.27), dimesToReturn));
-            _coinReturn.AddRange(Enumerable.Repeat(new Coin(5), nickelsToReturn));
+            var currentDifference = currentAmount - productPrice;
+            ReturnAppropriateChange(currentDifference);
+
+        }
+
+        private void ReturnAppropriateChange(decimal amountDifference)
+        {
+            foreach (var coin in _weightToValueMap.OrderByDescending(x => x.Value))
+            {
+                var numberOfCoinsToReturnForWeight = (int) (amountDifference/coin.Value);
+                amountDifference -= numberOfCoinsToReturnForWeight*coin.Value;
+                _coinReturn.AddRange(Enumerable.Repeat(new Coin(coin.Key), numberOfCoinsToReturnForWeight));
+            }
+        }
+
+        private static string SanitizeProductCode(string productCode)
+        {
+            return (productCode ?? "").ToUpper();
         }
 
         public void StockCoins(int numberOfQuarters, int numberOfDimes, int numberOfNickels)
         {
-            
+
         }
     }
 }
