@@ -25,6 +25,8 @@ namespace PillarKata.VendingMachine
             {5.67, .25m}
         };
 
+      
+
         private string _currentMessage = DefaultMessageWithoutCoins;
 
         public VendingMachine(IDispenseProduct dispenser)
@@ -70,14 +72,23 @@ namespace PillarKata.VendingMachine
         {
             productCode = (productCode ?? "").ToUpper(); //Postel's Law ;-)
 
-            if (_productCatalog.ContainsKey(productCode))
-            {
-                _currentMessage = string.Format("PRICE {0:C}", _productCatalog[productCode]);
-            }
+            if (!_productCatalog.ContainsKey(productCode))
+                return;
 
-            if(GetCurrentAmount() >= 1m)
-                _dispenser.DispenseProduct(productCode);
-                
+            var productPrice = _productCatalog[productCode];
+            _currentMessage = string.Format("PRICE {0:C}", productPrice);
+
+            var currentAmount = GetCurrentAmount();
+            if (currentAmount < productPrice) return;
+
+            _dispenser.DispenseProduct(productCode);
+            _currentMessage = "THANK YOU";
+
+            var amountDifference = currentAmount - productPrice;
+
+            _coinsInserted.Clear();
+
+            _coinReturn.AddRange(Enumerable.Repeat(new Coin(5.67), (int)(amountDifference/.25m)));
         }
     }
 }

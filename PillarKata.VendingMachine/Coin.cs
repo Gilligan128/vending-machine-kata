@@ -8,5 +8,6 @@ namespace PillarKata.VendingMachine
         {
             WeightInGrams = weightInGrams;
         }
+
     }
 }

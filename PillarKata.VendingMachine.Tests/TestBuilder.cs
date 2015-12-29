@@ -9,6 +9,11 @@
 
         public Coin CreateQuarter()
         {
+            return Quarter();
+        }
+
+        private static Coin Quarter()
+        {
             return new Coin(CoinWeights.Quarter);
         }
     }
