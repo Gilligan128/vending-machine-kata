@@ -16,6 +16,7 @@ namespace PillarKata.VendingMachine
         public class Display
         {
             public string Message { get; private set; }
+            public decimal Amount { get; set; }
 
             public Display(string message)
             {
