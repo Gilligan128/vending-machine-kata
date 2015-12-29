@@ -16,5 +16,17 @@ namespace PillarKata.VendingMachine.Tests
             var display = sut.CheckDisplay();
             Assert.Equal("INSERT COINS", display.Message);
         }
+
+        [Theory]
+        [InlineData("Cola", "1.00")]
+        public void ShouldShowInsufficientCoinsDisplayWhenButtonIspressedWithoutEnoughCoinsInserted(string buttonCode, string price)
+        {
+            var sut = new VendingMachine();
+
+            sut.PressButton(buttonCode);
+
+            var display = sut.CheckDisplay();
+            Assert.Equal(string.Format("PRICE ${0}", price), display.Message);
+        }
     }
 }
