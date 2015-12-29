@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.40629.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PillarKata.VendingMachine", "PillarKata.VendingMachine\PillarKata.VendingMachine.csproj", "{4A162818-FE81-488A-BB8F-A7E805A5C892}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PillarKata.VendingMachineTests", "PillarKata.VendingMachineTests\PillarKata.VendingMachineTests.csproj", "{C0A72429-A2D8-468E-A592-B4E89D932ABB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4A162818-FE81-488A-BB8F-A7E805A5C892}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A162818-FE81-488A-BB8F-A7E805A5C892}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A162818-FE81-488A-BB8F-A7E805A5C892}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A162818-FE81-488A-BB8F-A7E805A5C892}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C0A72429-A2D8-468E-A592-B4E89D932ABB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C0A72429-A2D8-468E-A592-B4E89D932ABB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C0A72429-A2D8-468E-A592-B4E89D932ABB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C0A72429-A2D8-468E-A592-B4E89D932ABB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
