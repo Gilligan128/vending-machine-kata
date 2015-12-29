@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using PillarKata.VendingMachine;
 using Xunit;
 
 namespace PillarKata.VendingMachine.Tests
@@ -93,6 +92,22 @@ namespace PillarKata.VendingMachine.Tests
             var coinReturn = sut.GetCoinReturn();
             Assert.Equal(1, coinReturn.Count);
             Assert.Equal(coin, coinReturn.First());
+        }
+
+        [Fact]
+        public void ShouldReturnMultipleCoinsWhenMultipleBadCoinsInserted()
+        {
+            var sut = new VendingMachine();
+            var firstCoin = new Coin(Penny);
+            var secondCoin = new Coin(MaliciousFakeCoin);
+
+            sut.InsertCoin(firstCoin);
+            sut.InsertCoin(secondCoin);
+
+            var coinReturn = sut.GetCoinReturn();
+            Assert.Equal(2, coinReturn.Count);
+            Assert.Equal(firstCoin, coinReturn.First());
+            Assert.Equal(secondCoin, coinReturn.Skip(1).First());
         }
     }
 }

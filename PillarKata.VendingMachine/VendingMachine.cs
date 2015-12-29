@@ -40,7 +40,7 @@ namespace PillarKata.VendingMachine
             if (_weightToValueMap.ContainsKey(coin.WeightInGrams))
                 _coinsInserted.Add(coin);
             else
-                _coinReturn = new List<Coin>{coin};
+                _coinReturn.Add(coin);
         }
 
         private decimal GetCurrentAmount()
