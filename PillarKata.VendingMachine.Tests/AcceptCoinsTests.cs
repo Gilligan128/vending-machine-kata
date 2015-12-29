@@ -31,7 +31,6 @@ namespace PillarKata.VendingMachine.Tests
             var coinReturn = sut.GetCoinReturn();
             Assert.Equal(0, coinReturn.Count);
         }
-
        
         [Theory]
         [InlineData(Nickel,.05)]    
@@ -51,9 +50,21 @@ namespace PillarKata.VendingMachine.Tests
             Assert.Equal(expectedAmount, display.Amount);
         }
 
+        [Fact]
         public void ShouldSumAmountWhenMultipleCoinsInserted()
         {
             var sut = new VendingMachine();
+
+            sut.InsertCoin(new Coin(Nickel));
+            sut.InsertCoin(new Coin(Nickel));
+            sut.InsertCoin(new Coin(Dime));
+            sut.InsertCoin(new Coin(Dime));
+            sut.InsertCoin(new Coin(Quarter));    
+            sut.InsertCoin(new Coin(Quarter));    
+            sut.InsertCoin(new Coin(Quarter));    
+
+            var display = sut.CheckDisplay();
+            Assert.Equal(1.05m, display.Amount);
         }
 
         [Theory]
