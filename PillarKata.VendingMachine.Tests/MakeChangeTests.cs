@@ -40,6 +40,6 @@ namespace PillarKata.VendingMachine.Tests
             Assert.Equal(CoinWeights.Quarter, coinReturn.First().WeightInGrams);
         }
 
-        [
+        
     }
 }
