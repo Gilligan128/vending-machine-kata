@@ -16,5 +16,15 @@
         {
             return new Coin(CoinWeights.Quarter);
         }
+
+        public Coin CreateDime()
+        {
+            return new Coin(CoinWeights.Dime);
+        }
+
+        public Coin CreateNickel()
+        {
+            return new Coin(CoinWeights.Nickel);
+        }
     }
 }
