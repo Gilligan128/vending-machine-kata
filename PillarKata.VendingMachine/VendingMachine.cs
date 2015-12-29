@@ -16,6 +16,8 @@ namespace PillarKata.VendingMachine
             ,{5.67, .25m}
         };
 
+        private List<Coin> _coinReturn = new List<Coin>();
+
         public Display CheckDisplay()
         {
             return new Display("INSERT COINS", GetCurrentAmount());
@@ -37,6 +39,8 @@ namespace PillarKata.VendingMachine
         {
             if (_weightToValueMap.ContainsKey(coin.WeightInGrams))
                 _coinsInserted.Add(coin);
+            else
+                _coinReturn = new List<Coin>{coin};
         }
 
         private decimal GetCurrentAmount()
@@ -46,8 +50,7 @@ namespace PillarKata.VendingMachine
 
         public IList<Coin> GetCoinReturn()
         {
-            
-            return new List<Coin>();
+            return _coinReturn;
         }
     }
 
