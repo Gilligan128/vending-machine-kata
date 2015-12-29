@@ -65,6 +65,8 @@
     <Compile Include="ReturnCoinsTests.cs" />
     <Compile Include="SelectProductTests.cs" />
     <Compile Include="SoldOutTests.cs" />
+    <Compile Include="StubbedDispenser.cs" />
+    <Compile Include="TestBuilder.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

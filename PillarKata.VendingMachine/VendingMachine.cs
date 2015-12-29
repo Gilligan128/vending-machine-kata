@@ -5,6 +5,7 @@ namespace PillarKata.VendingMachine
 {
     public class VendingMachine
     {
+        private readonly IDispenseProduct _dispenser;
         private const string DefaultMessageWithoutCoins = "INSERT COINS";
 
         private readonly List<Coin> _coinReturn = new List<Coin>();
@@ -26,9 +27,13 @@ namespace PillarKata.VendingMachine
 
         private string _currentMessage = DefaultMessageWithoutCoins;
 
+        public VendingMachine(IDispenseProduct dispenser)
+        {
+            _dispenser = dispenser;
+        }
+
         public string CheckDisplay()
         {
-            ;
             var display = _currentMessage;
             _currentMessage = GetDefaultMessage();
             return display;
@@ -61,12 +66,18 @@ namespace PillarKata.VendingMachine
             return _coinReturn;
         }
 
-        public void PressButton(string buttonCode)
+        public void PressButton(string productCode)
         {
-            buttonCode = (buttonCode ?? "").ToUpper(); //Postel's Law ;-)
+            productCode = (productCode ?? "").ToUpper(); //Postel's Law ;-)
 
-            if (_productCatalog.ContainsKey(buttonCode))
-                _currentMessage = string.Format("PRICE {0:C}", _productCatalog[buttonCode]);
+            if (_productCatalog.ContainsKey(productCode))
+            {
+                _currentMessage = string.Format("PRICE {0:C}", _productCatalog[productCode]);
+            }
+
+            if(GetCurrentAmount() >= 1m)
+                _dispenser.DispenseProduct(productCode);
+                
         }
     }
 }

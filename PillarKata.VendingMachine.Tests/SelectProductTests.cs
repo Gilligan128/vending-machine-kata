@@ -1,12 +1,12 @@
-﻿using System.Security.AccessControl;
-using System.Security.Cryptography;
+﻿using Microsoft.SqlServer.Server;
 using Xunit;
 
 namespace PillarKata.VendingMachine.Tests
 {
     public class SelectProductTests
     {
-        private const string ColaButton = "Cola";
+        private readonly TestBuilder _testBuilder = new TestBuilder();
+        private const string Cola = "COLA";
 
         [Theory]
         [InlineData(null)]
@@ -14,7 +14,7 @@ namespace PillarKata.VendingMachine.Tests
         [InlineData("Nothing")]
         public void SouldShowDefaultMessageWhenInvalidButtonIsEntered(string buttonCode)
         {
-            var sut = new VendingMachine();
+            var sut = _testBuilder.CreateVendingMachine();
 
             sut.PressButton(buttonCode);
 
@@ -23,12 +23,14 @@ namespace PillarKata.VendingMachine.Tests
         }
 
         [Theory]
-        [InlineData(ColaButton, "1.00")]
+        [InlineData(Cola, "1.00")]
         [InlineData("Chips", "0.50")]
         [InlineData("Candy", "0.65")]
-        public void ShouldShowInsufficientCoinsDisplayWhenButtonIspressedWithoutEnoughCoinsInserted(string buttonCode, string price)
+        [InlineData("Cola", "1.00")] //case-sensitivity test
+        public void ShouldShowInsufficientCoinsDisplayWhenButtonIspressedWithoutEnoughCoinsInserted(string buttonCode,
+            string price)
         {
-            var sut = new VendingMachine();
+            var sut = _testBuilder.CreateVendingMachine();
 
             sut.PressButton(buttonCode);
 
@@ -37,11 +39,22 @@ namespace PillarKata.VendingMachine.Tests
         }
 
         [Fact]
-        public void ShouldShowDefaultMessageWhenButtonIsPresedWithoutENoughCoinsAndDisplayIsCheckedOnce()
+        public void ShouldHaveNoDispensedProductWhenButtonIsPressedWithoutEnoughCoinsInserted()
         {
-            var sut = new VendingMachine();
+            var dispenser = new StubbedDispenser();
+            var sut = new VendingMachine(dispenser);
 
-            sut.PressButton(ColaButton);
+            sut.PressButton(Cola);
+
+            Assert.False(dispenser.WasProductDispensed);
+        }
+
+        [Fact]
+        public void ShouldShowDefaultMessageWhenButtonIsPressedWithoutEnoughCoinsAndDisplayIsCheckedOnce()
+        {
+            var sut = _testBuilder.CreateVendingMachine();
+
+            sut.PressButton(Cola);
             sut.CheckDisplay();
 
             var display = sut.CheckDisplay();
@@ -49,18 +62,31 @@ namespace PillarKata.VendingMachine.Tests
         }
 
         [Fact]
-        public void ShouldShowAmountWhenButtonIsPressedANdCOinsINsertedWIthoutEnoughCoinsAndDisplayIsCheckedOnce()
+        public void ShouldShowAmountWhenButtonIsPressedAndCoinsInsertedWithoutEnoughCoinsAndDisplayIsCheckedOnce()
         {
-            var sut = new VendingMachine();
+            var sut = _testBuilder.CreateVendingMachine();
 
             sut.InsertCoin(new Coin(CoinWeights.Nickel));
-            sut.PressButton(ColaButton);
-            sut.CheckDisplay();
+            sut.PressButton(Cola);
+            sut.CheckDisplay(); //The thought did cross my mind that we may be breaking Command/Query Separation here
 
             var display = sut.CheckDisplay();
             Assert.Equal("$0.05", display);
         }
 
-       
+        [Fact]
+        public void ShouldDispenseProductWhenButtonIsPressedWithEnoughCoinsInserted()
+        {
+            var dispenser = new StubbedDispenser();
+            var sut = new VendingMachine(dispenser);
+
+            sut.InsertCoin(_testBuilder.CreateQuarter());
+            sut.InsertCoin(_testBuilder.CreateQuarter());
+            sut.InsertCoin(_testBuilder.CreateQuarter());
+            sut.InsertCoin(_testBuilder.CreateQuarter());
+            sut.PressButton(Cola);
+
+            Assert.True(dispenser.WasProductDispensed);
+        }
     }
 }
