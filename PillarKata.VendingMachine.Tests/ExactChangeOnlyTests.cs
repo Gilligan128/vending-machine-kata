@@ -4,6 +4,7 @@ namespace PillarKata.VendingMachine.Tests
 {
     public class ExactChangeOnlyTests
     {
+        [Fact]
         public void ShouldDisplayExactChangeOnlyWhenThereArenoCoinsStocked()
         {
             var sut = new VendingMachine(new StubbedDispenser());

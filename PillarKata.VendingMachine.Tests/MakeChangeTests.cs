@@ -33,7 +33,6 @@ namespace PillarKata.VendingMachine.Tests
         {
             var sut = _testBuilder.CreateVendingMachine();
 
-            sut.StockCoins(0, dimesReturned, nickelsReturned);
             sut.InsertCoin(_testBuilder.CreateQuarter());
             sut.InsertCoin(_testBuilder.CreateQuarter());
             sut.InsertCoin(_testBuilder.CreateQuarter());

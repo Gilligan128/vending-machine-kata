@@ -40,6 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Coin.cs" />
+    <Compile Include="CoinBag.cs" />
     <Compile Include="IDispenseProduct.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VendingMachine.cs" />

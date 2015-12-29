@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 
 namespace PillarKata.VendingMachine
 {
     public class VendingMachine
     {
         private readonly IDispenseProduct _dispenser;
-        private const string DefaultMessageWithoutCoins = "INSERT COINS";
 
         private readonly List<Coin> _coinReturn = new List<Coin>();
         private readonly List<Coin> _coinsInserted = new List<Coin>();
@@ -25,13 +25,16 @@ namespace PillarKata.VendingMachine
             {5.67, .25m}
         };
 
-        private string _currentMessage = DefaultMessageWithoutCoins;
+        private string _currentMessage;
         private readonly Dictionary<string, int> _productStock;
+        private CoinBag _coinStock;
 
         public VendingMachine(IDispenseProduct dispenser)
         {
             _dispenser = dispenser;
             _productStock = _productCatalog.Keys.ToDictionary(k => k, s => 0);
+            _coinStock = new CoinBag(_weightToValueMap);
+            _currentMessage = GetDefaultMessage();
         }
 
         public string CheckDisplay()
@@ -55,7 +58,10 @@ namespace PillarKata.VendingMachine
         private string GetDefaultMessage()
         {
             var currentAmount = GetCurrentAmount();
-            return currentAmount > 0 ? string.Format("{0:C}", currentAmount) : DefaultMessageWithoutCoins;
+            var defaultMessage = currentAmount > 0 ? string.Format("{0:C}", currentAmount) : "INSERT COINS";
+            if (_coinStock.IsEmpty)
+                defaultMessage = "EXACT CHANGE ONLY";
+            return defaultMessage;
         }
 
         private decimal GetCurrentAmount()
@@ -100,12 +106,11 @@ namespace PillarKata.VendingMachine
 
         private void ReturnAppropriateChange(decimal amountDifference)
         {
-            foreach (var coin in _weightToValueMap.OrderByDescending(x => x.Value))
-            {
-                var numberOfCoinsToReturnForWeight = (int)(amountDifference / coin.Value);
-                amountDifference -= numberOfCoinsToReturnForWeight * coin.Value;
-                _coinReturn.AddRange(Enumerable.Repeat(new Coin(coin.Key), numberOfCoinsToReturnForWeight));
-            }
+            var coinsToReturn = new CoinBag(_weightToValueMap, _coinsInserted.GroupBy(x => x.WeightInGrams, coin => 1).ToDictionary(x => x.Key, x => x.Sum()))
+                .Merge(_coinStock)
+                .MakeChange(amountDifference);
+            
+            _coinReturn.AddRange(coinsToReturn.ToCoins());
         }
 
         private static string SanitizeProductCode(string productCode)
@@ -113,10 +118,13 @@ namespace PillarKata.VendingMachine
             return (productCode ?? "").ToUpper();
         }
 
-        public void StockCoins(int numberOfQuarters, int numberOfDimes, int numberOfNickels)
+        public void StockCoins(IDictionary<double, int> coinQuantities)
         {
-
+            _coinStock = new CoinBag(_weightToValueMap, coinQuantities);
+            _currentMessage = GetDefaultMessage();
         }
+
+
 
         public void ReturnCoins()
         {

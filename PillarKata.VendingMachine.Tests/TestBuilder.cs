@@ -14,6 +14,13 @@ namespace PillarKata.VendingMachine.Tests
                 {ProductCodes.Candy, 1},
                 {ProductCodes.Chips,1}
             });
+            vendingMachine.StockCoins(new Dictionary<double, int>
+            {
+                {CoinWeights.Quarter, 3},
+                {CoinWeights.Nickel, 2},
+                {CoinWeights.Dime, 2},
+
+            } );
             return vendingMachine;
         }
 

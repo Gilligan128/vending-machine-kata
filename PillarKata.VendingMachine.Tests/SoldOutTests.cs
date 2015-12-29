@@ -1,4 +1,5 @@
-﻿using Xunit;
+﻿using System.Collections.Generic;
+using Xunit;
 
 namespace PillarKata.VendingMachine.Tests
 {
@@ -35,6 +36,7 @@ namespace PillarKata.VendingMachine.Tests
         {
             var sut = new VendingMachine(new StubbedDispenser());
 
+            sut.StockCoins(new Dictionary<double, int> { { CoinWeights.Quarter, 10 } });
             sut.PressButton(ProductCodes.Chips);
             sut.CheckDisplay();
 
