@@ -5,10 +5,6 @@ namespace PillarKata.VendingMachine.Tests
 {
     public class AcceptCoinsTests
     {
-        private const double Nickel = 5.0;
-        private const double Dime = 2.27;
-        private const double Quarter = 5.67;
-        private const double Penny = 2.5;
         private const double MaliciousFakeCoin = 1.11;
 
 
@@ -18,8 +14,7 @@ namespace PillarKata.VendingMachine.Tests
             var sut = new VendingMachine();
 
             var display = sut.CheckDisplay();
-            Assert.Equal("INSERT COINS", display.Message);
-            Assert.Equal(0m, display.Amount);
+            Assert.Equal("INSERT COINS", display);
         }
 
         [Fact]
@@ -32,12 +27,12 @@ namespace PillarKata.VendingMachine.Tests
         }
        
         [Theory]
-        [InlineData(Nickel,.05)]    
-        [InlineData(Dime,.10)]    
-        [InlineData(Quarter,.25)]    
-        [InlineData(Penny,0)]      
-        [InlineData(MaliciousFakeCoin,0)]  
-        public void ShouldAcceptNickelsDimesAndQuartersOnly(double weightInGrams, decimal expectedAmount)
+        [InlineData(CoinWeights.Nickel,"$0.05")]    
+        [InlineData(CoinWeights.Dime,"$0.10")]    
+        [InlineData(CoinWeights.Quarter,"$0.25")]    
+        [InlineData(CoinWeights.Penny,"INSERT COINS")]      
+        [InlineData(MaliciousFakeCoin,"INSERT COINS")]  
+        public void ShouldAcceptNickelsDimesAndQuartersOnly(double weightInGrams, string expectedAmount)
         {
             var sut = new VendingMachine();
 
@@ -45,8 +40,7 @@ namespace PillarKata.VendingMachine.Tests
 
             var display = sut.CheckDisplay();
 
-            Assert.Equal("INSERT COINS", display.Message);
-            Assert.Equal(expectedAmount, display.Amount);
+            Assert.Equal(expectedAmount, display);
         }
 
         [Fact]
@@ -54,22 +48,22 @@ namespace PillarKata.VendingMachine.Tests
         {
             var sut = new VendingMachine();
 
-            sut.InsertCoin(new Coin(Nickel));
-            sut.InsertCoin(new Coin(Nickel));
-            sut.InsertCoin(new Coin(Dime));
-            sut.InsertCoin(new Coin(Dime));
-            sut.InsertCoin(new Coin(Quarter));    
-            sut.InsertCoin(new Coin(Quarter));    
-            sut.InsertCoin(new Coin(Quarter));    
+            sut.InsertCoin(new Coin(CoinWeights.Nickel));
+            sut.InsertCoin(new Coin(CoinWeights.Nickel));
+            sut.InsertCoin(new Coin(CoinWeights.Dime));
+            sut.InsertCoin(new Coin(CoinWeights.Dime));
+            sut.InsertCoin(new Coin(CoinWeights.Quarter));    
+            sut.InsertCoin(new Coin(CoinWeights.Quarter));    
+            sut.InsertCoin(new Coin(CoinWeights.Quarter));    
 
             var display = sut.CheckDisplay();
-            Assert.Equal(1.05m, display.Amount);
+            Assert.Equal("$1.05", display);
         }
 
         [Theory]
-        [InlineData(Nickel)] 
-        [InlineData(Dime)] 
-        [InlineData(Quarter)] 
+        [InlineData(CoinWeights.Nickel)] 
+        [InlineData(CoinWeights.Dime)] 
+        [InlineData(CoinWeights.Quarter)] 
         public void ShouldNotReturnNickelsDimesAndQuarters(double weightInGrams)
         {
             var sut = new VendingMachine();
@@ -80,7 +74,7 @@ namespace PillarKata.VendingMachine.Tests
         }
 
         [Theory]
-        [InlineData(Penny, true)] 
+        [InlineData(CoinWeights.Penny, true)] 
         [InlineData(MaliciousFakeCoin, true)] 
         public void ShouldReturnCoinsThatAreNotNickelsDimesOrQuarters(double weightInGrams, bool shouldReject)
         {
@@ -98,7 +92,7 @@ namespace PillarKata.VendingMachine.Tests
         public void ShouldReturnMultipleCoinsWhenMultipleBadCoinsInserted()
         {
             var sut = new VendingMachine();
-            var firstCoin = new Coin(Penny);
+            var firstCoin = new Coin(CoinWeights.Penny);
             var secondCoin = new Coin(MaliciousFakeCoin);
 
             sut.InsertCoin(firstCoin);

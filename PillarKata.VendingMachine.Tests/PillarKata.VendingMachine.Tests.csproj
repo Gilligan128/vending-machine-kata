@@ -58,6 +58,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AcceptCoinsTests.cs" />
+    <Compile Include="CoinWeights.cs" />
     <Compile Include="ExactChangeOnlyTests.cs" />
     <Compile Include="MakeChangeTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

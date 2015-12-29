@@ -5,12 +5,12 @@ namespace PillarKata.VendingMachine
 {
     public class VendingMachine
     {
-        private readonly List<Coin> _coinsInserted = new List<Coin>();
+        private const string DefaultMessageWithoutCoins = "INSERT COINS";
 
         private readonly List<Coin> _coinReturn = new List<Coin>();
-        private string _currentMessage = "INSERT COINS";
+        private readonly List<Coin> _coinsInserted = new List<Coin>();
 
-        private readonly  IDictionary<string, decimal> _productCatalog = new Dictionary<string, decimal>
+        private readonly IDictionary<string, decimal> _productCatalog = new Dictionary<string, decimal>
         {
             {"COLA", 1m},
             {"CHIPS", .5m},
@@ -22,21 +22,33 @@ namespace PillarKata.VendingMachine
             {5, .05m},
             {2.27, .10m},
             {5.67, .25m}
-        }; 
+        };
 
-        public Display CheckDisplay()
+        private string _currentMessage = DefaultMessageWithoutCoins;
+
+        public string CheckDisplay()
         {
-            var display = new Display(_currentMessage, GetCurrentAmount());
-            _currentMessage = "INSERT COINS";
+            ;
+            var display = _currentMessage;
+            _currentMessage = GetDefaultMessage();
             return display;
         }
 
         public void InsertCoin(Coin coin)
         {
             if (_weightToValueMap.ContainsKey(coin.WeightInGrams))
+            {
                 _coinsInserted.Add(coin);
+                _currentMessage = GetDefaultMessage();
+            }
             else
                 _coinReturn.Add(coin);
+        }
+
+        private string GetDefaultMessage()
+        {
+            var currentAmount = GetCurrentAmount();
+            return currentAmount > 0 ? string.Format("{0:C}", currentAmount) : DefaultMessageWithoutCoins;
         }
 
         private decimal GetCurrentAmount()
