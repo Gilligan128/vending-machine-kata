@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Xunit;
 
@@ -41,13 +42,7 @@ namespace PillarKata.VendingMachine.Tests
             sut.PressButton(productCode);
 
             var coinReturn = sut.GetCoinReturn();
-            var coinsReturned = quartersReturned + dimesReturned + nickelsReturned;
-            Assert.True(coinsReturned == coinReturn.Count, string.Format("Product: {0}, Expected {1} Coins, Actual {2} Coins", productCode, coinsReturned, coinReturn.Count));
-            Assert.Equal(quartersReturned, coinReturn.Count(x => x.WeightInGrams == CoinWeights.Quarter));
-            Assert.Equal(dimesReturned, coinReturn.Count(x => x.WeightInGrams == CoinWeights.Dime));
-            Assert.Equal(nickelsReturned, coinReturn.Count(x => x.WeightInGrams == CoinWeights.Nickel));
+            Assertions.CoinsReturned(productCode, quartersReturned, dimesReturned, nickelsReturned, coinReturn);
         }
-
-
     }
 }

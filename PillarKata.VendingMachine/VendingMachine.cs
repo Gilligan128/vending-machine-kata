@@ -94,8 +94,8 @@ namespace PillarKata.VendingMachine
         {
             foreach (var coin in _weightToValueMap.OrderByDescending(x => x.Value))
             {
-                var numberOfCoinsToReturnForWeight = (int) (amountDifference/coin.Value);
-                amountDifference -= numberOfCoinsToReturnForWeight*coin.Value;
+                var numberOfCoinsToReturnForWeight = (int)(amountDifference / coin.Value);
+                amountDifference -= numberOfCoinsToReturnForWeight * coin.Value;
                 _coinReturn.AddRange(Enumerable.Repeat(new Coin(coin.Key), numberOfCoinsToReturnForWeight));
             }
         }
@@ -108,6 +108,11 @@ namespace PillarKata.VendingMachine
         public void StockCoins(int numberOfQuarters, int numberOfDimes, int numberOfNickels)
         {
 
+        }
+
+        public void ReturnCoins()
+        {
+            _coinReturn.AddRange(_coinsInserted);
         }
     }
 }
