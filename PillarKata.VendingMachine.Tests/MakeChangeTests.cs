@@ -19,7 +19,7 @@ namespace PillarKata.VendingMachine.Tests
             sut.InsertCoin(_testBuilder.CreateQuarter());
             sut.InsertCoin(_testBuilder.CreateQuarter());
             sut.InsertCoin(_testBuilder.CreateQuarter());
-            sut.PressButton(ProductCodes.Cola);
+            sut.SelectProduct(ProductCodes.Cola);
 
             var coinReturn = sut.GetCoinReturn();
             Assert.Equal(0, coinReturn.Count);
@@ -38,7 +38,7 @@ namespace PillarKata.VendingMachine.Tests
             sut.InsertCoin(_testBuilder.CreateQuarter());
             sut.InsertCoin(_testBuilder.CreateQuarter());
             sut.InsertCoin(_testBuilder.CreateQuarter());
-            sut.PressButton(productCode);
+            sut.SelectProduct(productCode);
 
             var coinReturn = sut.GetCoinReturn();
             Assertions.CoinsReturned(productCode, quartersReturned, dimesReturned, nickelsReturned, coinReturn);

@@ -17,7 +17,7 @@ namespace PillarKata.VendingMachine.Tests
         {
             var sut = _testBuilder.CreateVendingMachine();
 
-            sut.PressButton(buttonCode);
+            sut.SelectProduct(buttonCode);
 
             var display = sut.CheckDisplay();
             Assert.Equal("INSERT COINS", display);
@@ -29,7 +29,7 @@ namespace PillarKata.VendingMachine.Tests
             var dispenser = new StubbedDispenser();
             var sut = new VendingMachine(dispenser);
 
-            sut.PressButton("Invalid");
+            sut.SelectProduct("Invalid");
 
             Assert.False(dispenser.WasProductDispensed);
         }
@@ -44,7 +44,7 @@ namespace PillarKata.VendingMachine.Tests
         {
             var sut = _testBuilder.CreateVendingMachine();
 
-            sut.PressButton(buttonCode);
+            sut.SelectProduct(buttonCode);
 
             var display = sut.CheckDisplay();
             Assert.Equal(string.Format("PRICE ${0}", price), display);
@@ -56,7 +56,7 @@ namespace PillarKata.VendingMachine.Tests
             var dispenser = new StubbedDispenser();
             var sut = new VendingMachine(dispenser);
 
-            sut.PressButton(ProductCodes.Cola);
+            sut.SelectProduct(ProductCodes.Cola);
 
             Assert.False(dispenser.WasProductDispensed);
         }
@@ -66,7 +66,7 @@ namespace PillarKata.VendingMachine.Tests
         {
             var sut = _testBuilder.CreateVendingMachine();
 
-            sut.PressButton(ProductCodes.Cola);
+            sut.SelectProduct(ProductCodes.Cola);
             sut.CheckDisplay();
 
             var display = sut.CheckDisplay();
@@ -80,7 +80,7 @@ namespace PillarKata.VendingMachine.Tests
 
             sut.StockProduct(new Dictionary<string, int> { { ProductCodes.Cola, 1 } });
             sut.InsertCoin(new Coin(CoinWeights.Nickel));
-            sut.PressButton(ProductCodes.Cola);
+            sut.SelectProduct(ProductCodes.Cola);
             sut.CheckDisplay(); //The thought did cross my mind that we may be breaking Command/Query Separation here
 
             var display = sut.CheckDisplay();
@@ -95,13 +95,14 @@ namespace PillarKata.VendingMachine.Tests
         {
             var dispenser = new StubbedDispenser();
             var sut = new VendingMachine(dispenser);
+            StockMachineWithCoinsNeededToMakeChange(sut);
 
             for (var i = 0; i < numberOfQuartersInserted; i++)
             {
                sut.InsertCoin(_testBuilder.CreateQuarter()); 
             }
             sut.StockProduct(new Dictionary<string, int>{ {productCode, 1}});
-            sut.PressButton(productCode);
+            sut.SelectProduct(productCode);
 
             Assert.True(dispenser.WasProductDispensed);
         }
@@ -114,16 +115,27 @@ namespace PillarKata.VendingMachine.Tests
         {
             var dispenser = new StubbedDispenser();
             var sut = new VendingMachine(dispenser);
+            StockMachineWithCoinsNeededToMakeChange(sut);
 
             for (var i = 0; i < numberOfQuartersInserted; i++)
             {
                 sut.InsertCoin(_testBuilder.CreateQuarter());
             }
             sut.StockProduct(new Dictionary<string, int>{ {productCode, 1}});
-            sut.PressButton(productCode);
+            sut.SelectProduct(productCode);
 
             var display = sut.CheckDisplay();
             Assert.Equal("THANK YOU", display);
+        }
+
+        private static void StockMachineWithCoinsNeededToMakeChange(VendingMachine sut)
+        {
+            sut.StockCoins(new Dictionary<double, int>
+            {
+                {CoinWeights.Quarter, 1},
+                {CoinWeights.Dime, 1},
+                {CoinWeights.Nickel, 1},
+            });
         }
 
         [Fact]
@@ -133,7 +145,7 @@ namespace PillarKata.VendingMachine.Tests
 
             sut.InsertCoin(_testBuilder.CreateQuarter());
             sut.InsertCoin(_testBuilder.CreateQuarter());
-            sut.PressButton(ProductCodes.Chips);
+            sut.SelectProduct(ProductCodes.Chips);
             sut.CheckDisplay();
 
             var display = sut.CheckDisplay();

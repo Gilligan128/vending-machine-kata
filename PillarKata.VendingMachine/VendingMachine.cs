@@ -74,7 +74,7 @@ namespace PillarKata.VendingMachine
             return _coinReturn;
         }
 
-        public void PressButton(string productCode)
+        public void SelectProduct(string productCode)
         {
             productCode = SanitizeProductCode(productCode); //Postel's Law ;-)
 
@@ -87,19 +87,28 @@ namespace PillarKata.VendingMachine
                 return;
             }
 
+
             var productPrice = _productCatalog[productCode];
             _currentMessage = string.Format("PRICE {0:C}", productPrice);
 
             var currentAmount = GetCurrentAmount();
             if (currentAmount < productPrice) return;
 
-            var currentDifference = currentAmount - productPrice;
-            var coinsToReturn = 
-                _coinStock
-                    .WithCoins(_coinsInserted)
-                    .MakeChange(currentDifference);
+            var changeDue = currentAmount - productPrice;
 
-            _coinStock = _coinStock.WithCoins(_coinsInserted).Without(coinsToReturn);
+            var coinStockAndInserted = _coinStock
+                .WithCoins(_coinsInserted);
+            if (!coinStockAndInserted.CanMakeChange(changeDue))
+            {
+                _currentMessage = GetDefaultMessage();
+                return;
+            }
+
+            var coinsToReturn = 
+                coinStockAndInserted
+                    .MakeChange(changeDue);
+
+            _coinStock = coinStockAndInserted.Without(coinsToReturn);
             _coinsInserted.Clear();
             _currentMessage = "THANK YOU";
             _dispenser.DispenseProduct(productCode);

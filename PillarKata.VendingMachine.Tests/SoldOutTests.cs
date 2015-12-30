@@ -14,7 +14,7 @@ namespace PillarKata.VendingMachine.Tests
 
             sut.InsertCoin(_testBuilder.CreateQuarter());
             sut.InsertCoin(_testBuilder.CreateQuarter());
-            sut.PressButton(ProductCodes.Chips);
+            sut.SelectProduct(ProductCodes.Chips);
 
             var display = sut.CheckDisplay();
             Assert.Equal("SOLD OUT", display);
@@ -25,7 +25,7 @@ namespace PillarKata.VendingMachine.Tests
         {
             var sut = new VendingMachine(new StubbedDispenser());
 
-            sut.PressButton(ProductCodes.Chips);
+            sut.SelectProduct(ProductCodes.Chips);
 
             var display = sut.CheckDisplay();
             Assert.Equal("SOLD OUT", display);
@@ -37,7 +37,7 @@ namespace PillarKata.VendingMachine.Tests
             var sut = new VendingMachine(new StubbedDispenser());
 
             sut.StockCoins(new Dictionary<double, int> { { CoinWeights.Quarter, 10 }, { CoinWeights.Dime, 1 }, { CoinWeights.Nickel, 1 } });
-            sut.PressButton(ProductCodes.Chips);
+            sut.SelectProduct(ProductCodes.Chips);
             sut.CheckDisplay();
 
             var display = sut.CheckDisplay();
