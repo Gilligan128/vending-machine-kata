@@ -58,9 +58,14 @@ namespace PillarKata.VendingMachine
         private string GetDefaultMessage()
         {
             var currentAmount = GetCurrentAmount();
-            var defaultMessage = currentAmount > 0 ? string.Format("{0:C}", currentAmount) : "INSERT COINS";
+            var defaultMessage = "INSERT COINS";
+
             if (_coinStock.AnySlotEmpty)
                 defaultMessage = "EXACT CHANGE ONLY";
+
+            if (currentAmount > 0)
+                defaultMessage = string.Format("{0:C}", currentAmount);
+ 
             return defaultMessage;
         }
 
@@ -87,7 +92,6 @@ namespace PillarKata.VendingMachine
                 return;
             }
 
-
             var productPrice = _productCatalog[productCode];
             _currentMessage = string.Format("PRICE {0:C}", productPrice);
 
@@ -100,7 +104,7 @@ namespace PillarKata.VendingMachine
                 .WithCoins(_coinsInserted);
             if (!coinStockAndInserted.CanMakeChange(changeDue))
             {
-                _currentMessage = GetDefaultMessage();
+                _currentMessage = "EXACT CHANGE ONLY";
                 return;
             }
 

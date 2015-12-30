@@ -71,5 +71,17 @@ namespace PillarKata.VendingMachine.Tests
             var display = sut.CheckDisplay();
             Assert.Equal("EXACT CHANGE ONLY", display);
         }
+
+        [Fact]
+        public void ShouldDisplayCurrentAmountInsteadOfExactCHangeOnlyWhenCoinsInserted()
+        {
+            var sut = new VendingMachine(new StubbedDispenser());
+
+            sut.StockProduct(new Dictionary<string, int> { { ProductCodes.Candy, 1 } });
+            sut.InsertCoin(_testBuilder.CreateQuarter());
+
+            var display = sut.CheckDisplay();
+            Assert.Equal("$0.25", display);
+        }
     }
 }
