@@ -79,11 +79,16 @@ namespace PillarKata.VendingMachine
 
         public CoinBag Merge(CoinBag otherBag)
         {
-            if (!_coinQuantities.Keys.OrderBy(x => x).SequenceEqual(otherBag._coinQuantities.Keys.OrderBy(x => x)))
-                throw new InvalidOperationException("these bags map to different coin types");
+            VerifyCoinBagsAcceptSameTypes(otherBag);
 
             var amounts = _coinQuantities.ToDictionary(x => x.Key, x => x.Value + otherBag._coinQuantities[x.Key]);
             return new CoinBag(_valueMap, amounts);
+        }
+
+        private void VerifyCoinBagsAcceptSameTypes(CoinBag otherBag)
+        {
+            if (!_coinQuantities.Keys.OrderBy(x => x).SequenceEqual(otherBag._coinQuantities.Keys.OrderBy(x => x)))
+                throw new InvalidOperationException("these bags map to different coin types");
         }
 
         public IEnumerable<Coin> ToCoins()
@@ -95,6 +100,13 @@ namespace PillarKata.VendingMachine
                     yield return new Coin(startingAmount.Key);
                 }
             }
+        }
+
+        public CoinBag Without(CoinBag otherBag)
+        {
+            VerifyCoinBagsAcceptSameTypes(otherBag);
+            var amounts = _coinQuantities.ToDictionary(x => x.Key, x => Math.Max(x.Value - otherBag._coinQuantities[x.Key], 0));
+            return new CoinBag(_valueMap, amounts);
         }
     }
 }

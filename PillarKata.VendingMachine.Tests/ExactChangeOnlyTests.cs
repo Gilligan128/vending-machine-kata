@@ -21,7 +21,7 @@ namespace PillarKata.VendingMachine.Tests
         public void ShouldDisplayExactChangeOnlyWhenThereIsNotEnoughChangeForAnyProduct(int quarters, int dimes, int nickels)
         {
             //Algorithm: a heuristic we will apply is to have at least 1 of every coin in the system 
-            //to allow us to make change. This will cover no tonly our current item prices.
+            //to allow us to make change. This will cover only our current item prices.
 
             var sut = new VendingMachine(new StubbedDispenser());
             sut.StockCoins(new Dictionary<double, int>

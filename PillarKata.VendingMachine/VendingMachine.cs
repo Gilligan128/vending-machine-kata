@@ -99,6 +99,7 @@ namespace PillarKata.VendingMachine
                     .WithCoins(_coinsInserted)
                     .MakeChange(currentDifference);
 
+            _coinStock = _coinStock.WithCoins(_coinsInserted).Without(coinsToReturn);
             _coinsInserted.Clear();
             _currentMessage = "THANK YOU";
             _dispenser.DispenseProduct(productCode);
