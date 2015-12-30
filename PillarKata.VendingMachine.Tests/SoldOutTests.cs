@@ -36,7 +36,7 @@ namespace PillarKata.VendingMachine.Tests
         {
             var sut = new VendingMachine(new StubbedDispenser());
 
-            sut.StockCoins(new Dictionary<double, int> { { CoinWeights.Quarter, 10 } });
+            sut.StockCoins(new Dictionary<double, int> { { CoinWeights.Quarter, 10 }, { CoinWeights.Dime, 1 }, { CoinWeights.Nickel, 1 } });
             sut.PressButton(ProductCodes.Chips);
             sut.CheckDisplay();
 

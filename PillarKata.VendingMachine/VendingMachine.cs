@@ -59,7 +59,7 @@ namespace PillarKata.VendingMachine
         {
             var currentAmount = GetCurrentAmount();
             var defaultMessage = currentAmount > 0 ? string.Format("{0:C}", currentAmount) : "INSERT COINS";
-            if (_coinStock.IsEmpty)
+            if (_coinStock.AnySlotEmpty)
                 defaultMessage = "EXACT CHANGE ONLY";
             return defaultMessage;
         }
@@ -93,23 +93,15 @@ namespace PillarKata.VendingMachine
             var currentAmount = GetCurrentAmount();
             if (currentAmount < productPrice) return;
 
-            _dispenser.DispenseProduct(productCode);
-
-            _currentMessage = "THANK YOU";
+            var currentDifference = currentAmount - productPrice;
+            var coinsToReturn = 
+                _coinStock
+                    .WithCoins(_coinsInserted)
+                    .MakeChange(currentDifference);
 
             _coinsInserted.Clear();
-
-            var currentDifference = currentAmount - productPrice;
-            ReturnAppropriateChange(currentDifference);
-
-        }
-
-        private void ReturnAppropriateChange(decimal amountDifference)
-        {
-            var coinsToReturn = new CoinBag(_weightToValueMap, _coinsInserted.GroupBy(x => x.WeightInGrams, coin => 1).ToDictionary(x => x.Key, x => x.Sum()))
-                .Merge(_coinStock)
-                .MakeChange(amountDifference);
-            
+            _currentMessage = "THANK YOU";
+            _dispenser.DispenseProduct(productCode);
             _coinReturn.AddRange(coinsToReturn.ToCoins());
         }
 
